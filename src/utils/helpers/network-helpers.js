@@ -39,13 +39,32 @@ export const getPageParamsFromRes = (res) => {
 }
 
 export const createPageableQuery = (pageParams, needAmpersand = false) => {
-  const page = pageParams.last ? pageParams.pageNumber : pageParams.pageNumber + 1
+  const page = pageParams.last ?
+               pageParams.pageNumber :
+               pageParams.pageNumber + 1
   return `${needAmpersand ? '&' : ''}page=${page}&size=${pageParams.pageSize}`;
 }
 
 export const createFiltersQueryStr = (filters, needAmpersand = false) => {
-  return '';
-  // return `${needAmpersand ? '&' : ''}`
+  const queryStr = Object.keys(filters).reduce((acc, field) => {
+    if (filters[field].chosenValue) {
+      let filterValue = filters[field].chosenValue;
+      if (field === 'creationDate' || field === 'birthday') {
+        filterValue = new Date(filters[field].chosenValue).toJSON();
+      }
+      const encodedStr = encodeURIComponent(
+        `[${filters[field].operation}]=${filterValue}`
+      );
+      acc += `filter=${encodedStr}&`
+    }
+    return acc;
+  }, '')
+  if (!queryStr) {
+    return ''
+  } else {
+    const resulstQueryStr = queryStr.slice(0, -1)
+    return `${needAmpersand ? '&' : ''}${resulstQueryStr}`
+  }
 }
 
 export const createSortQueryStr = (sort, needAmpersand = false) => {
@@ -59,45 +78,62 @@ export const createSortQueryStr = (sort, needAmpersand = false) => {
   if (!queryStr) {
     return ''
   } else {
-    //без последнего элемента, чтобы убрать лишнюю запятую;
-    const resulstQuearyStr = queryStr.slice(0, -1)
-    return `${needAmpersand ? '&' : ''}${resulstQuearyStr}`
+    const resulstQueryStr = queryStr.slice(0, -1)
+    return `${needAmpersand ? '&' : ''}${resulstQueryStr}`
   }
 }
 
 
 export const apiDefault = async ({
-    apiCall,
-    url,
-    data = null,
-    dispatch
-  }) => {
+  apiCall,
+  url,
+  data = null,
+  dispatch
+}) => {
   const timeout = setTimeout(() => {
     throw new Error('Превышено время ожидания ответа')
   }, PRIMARY_TIMEOUT)
   try {
     const res = await apiCall(url, data);
-    return fulfillResponse(res, {dispatch, timeout})
+    return fulfillResponse(
+      res,
+      {
+        dispatch,
+        timeout
+      }
+    )
   } catch (e) {
-    return rejectError(e, {dispatch, timeout})
+    return rejectError(
+      e,
+      {
+        dispatch,
+        timeout
+      }
+    )
   }
 }
 
 
-export const fulfillResponse = (res, {dispatch, timeout}) => {
+export const fulfillResponse = (res, {
+  dispatch,
+  timeout
+}) => {
   clearTimeout(timeout)
   if (res.status >= 400) {
     return dispatch(setNewError({
       path: res.url,
       status: res.status,
       message: res.status >= 500 ?
-               messageErrorMoreThen500:
+               messageErrorMoreThen500 :
                messageErrorLessThen500
     }))
   }
   return res
 }
-export const rejectError = (e, {dispatch, timeout}) => {
+export const rejectError = (e, {
+  dispatch,
+  timeout
+}) => {
   clearTimeout(timeout)
   if (e.stack === 'TypeError: Failed to fetch') {
     dispatch(setNewError({

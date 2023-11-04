@@ -2,13 +2,27 @@ import * as React from 'react';
 import Popover from '@mui/material/Popover';
 import FilterListIcon from "@mui/icons-material/FilterList";
 import IconButton from "@mui/material/IconButton";
-import {FormGroup, FormLabel, MenuItem, TextField} from "@mui/material";
+import {
+  Badge,
+  Button,
+  FormGroup,
+  FormLabel,
+} from "@mui/material";
 import Box from "@mui/material/Box";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {filtersSelector} from "../store/slices/Persons/Persons.selectors";
-import {filterOperationTypes} from "../store/slices/Persons/Persons.helpers";
+import {
+  applyFilters, clearAllFilters, clearFilterField,
+  setFilterOperation,
+  setFilterSearchStr
+} from "../store/slices/Persons/Persons.slice";
+import {useMemo} from "react";
+import {filterTypes} from "../utils/constants/common";
+import FilterField from "./FilterField";
 
 const FiltersPopover = () => {
+  const dispatch = useDispatch();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const filters = useSelector(filtersSelector);
@@ -24,18 +38,42 @@ const FiltersPopover = () => {
   const open = Boolean(anchorEl);
   const id = open ? 'filters-popover' : undefined;
 
+  const activeFiltersCount = useMemo(() => {
+    return Object.values(filters).filter(filterField => filterField.chosenValue).length;
+  }, [filters])
+
   const handleFilterValueChange = (event) => {
-    console.log(event.target.value);
+    dispatch(setFilterSearchStr({
+      field: event.target.name,
+      value: event.target.value
+    }))
   }
 
   const handleFilterOperationChange = (event) => {
-    console.log(event.target.name)
+    dispatch(setFilterOperation({
+      field: event.target.name,
+      value: event.target.value
+    }))
+  }
+
+  const handleApplyFilters = () => {
+    dispatch(applyFilters());
+  }
+
+  const handleClearAllFilters = () => {
+    dispatch(clearAllFilters());
+  }
+
+  const handleClearFilterField = (field) => () => {
+    dispatch(clearFilterField(field));
   }
 
   return (
     <div>
       <IconButton aria-describedby={id} onClick={handleClick}>
-        <FilterListIcon/>
+        <Badge badgeContent={activeFiltersCount} color="error">
+          <FilterListIcon/>
+        </Badge>
       </IconButton>
       <Popover
         id={id}
@@ -65,396 +103,146 @@ const FiltersPopover = () => {
             fontWeight: '600'
           }}>Filters</FormLabel>
           <div>
-            <Box display='flex'>
-              <TextField
-                select
-                value={filters.id.operation}
-                size='small'
-                sx={{
-                  width: '70px'
-                }}
-                name='id'
-                onChange={handleFilterOperationChange}
-              >
-                {filterOperationTypes.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                label="ID"
-                value={filters.id.searchStr}
-                name='id'
-                shrink
-                onChange={handleFilterValueChange}
-                inputProps={{type: 'number'}}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                size='small'
-              />
-            </Box>
-            <Box display='flex'>
-              <TextField
-                select
-                value={filters.name.operation}
-                size='small'
-                sx={{
-                  width: '70px'
-                }}
-                name='name'
-                onChange={handleFilterOperationChange}
-              >
-                {filterOperationTypes.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                label="Name"
-                value={filters.name.searchStr}
-                name='name'
-                InputLabelProps={{
-                  shrink: true
-                }}
-                onChange={handleFilterValueChange}
-                size='small'
-              />
-            </Box>
-            <Box display='flex'>
-              <TextField
-                select
-                value={filters.creationDate.operation}
-                size='small'
-                sx={{
-                  width: '70px'
-                }}
-                name='creationDate'
-                onChange={handleFilterOperationChange}
-              >
-                {filterOperationTypes.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                label="Creation Date"
-                name='creationDate'
-                type='date'
-                value={filters.creationDate.searchStr}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                onChange={handleFilterValueChange}
-                size='small'
-              />
-            </Box>
-            <Box display='flex'>
-              <TextField
-                select
-                value={filters.height.operation}
-                size='small'
-                sx={{
-                  width: '70px'
-                }}
-                name='height'
-                onChange={handleFilterOperationChange}
-              >
-                {filterOperationTypes.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                label="Height"
-                value={filters.height.searchStr}
-                name='height'
-                shrink
-                onChange={handleFilterValueChange}
-                inputProps={{type: 'number'}}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                size='small'
-              />
-            </Box>
-            <Box display='flex'>
-              <TextField
-                select
-                value={filters.weight.operation}
-                size='small'
-                sx={{
-                  width: '70px'
-                }}
-                name='weight'
-                onChange={handleFilterOperationChange}
-              >
-                {filterOperationTypes.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                label="Weight"
-                value={filters.weight.searchStr}
-                name='weight'
-                shrink
-                onChange={handleFilterValueChange}
-                inputProps={{type: 'number'}}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                size='small'
-              />
-            </Box>
-            <Box display='flex'>
-              <TextField
-                select
-                value={filters.birthday.operation}
-                size='small'
-                sx={{
-                  width: '70px'
-                }}
-                name='birthday'
-                onChange={handleFilterOperationChange}
-              >
-                {filterOperationTypes.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                label="Birthday"
-                name='birthday'
-                type='date'
-                value={filters.birthday.searchStr}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                onChange={handleFilterValueChange}
-                size='small'
-              />
-            </Box>
-            <Box display='flex'>
-              <TextField
-                select
-                value={filters.nationality.operation}
-                size='small'
-                sx={{
-                  width: '70px'
-                }}
-                name='nationality'
-                onChange={handleFilterOperationChange}
-              >
-                {filterOperationTypes.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                label="Nationality"
-                value={filters.nationality.searchStr}
-                name='nationality'
-                shrink
-                onChange={handleFilterValueChange}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                size='small'
-              />
-            </Box>
-            <Box display='flex'>
-              <TextField
-                select
-                value={filters.hairColor.operation}
-                size='small'
-                sx={{
-                  width: '70px'
-                }}
-                name='hairColor'
-                onChange={handleFilterOperationChange}
-              >
-                {filterOperationTypes.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                label="Hair Color"
-                value={filters.hairColor.searchStr}
-                name='hairColor'
-                shrink
-                onChange={handleFilterValueChange}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                size='small'
-              />
-            </Box>
+            <FilterField
+              filter={filters.id}
+              name='id'
+              label='ID'
+              filterType={filterTypes.NUMBER}
+              handleChangeFilterSearchStr={handleFilterValueChange}
+              handleChangeFilterOperation={handleFilterOperationChange}
+              handleClearFilterField={handleClearFilterField('id')}
+            />
+            <FilterField
+              filter={filters.name}
+              name='name'
+              label='Name'
+              filterType={filterTypes.TEXT}
+              handleChangeFilterSearchStr={handleFilterValueChange}
+              handleChangeFilterOperation={handleFilterOperationChange}
+              handleClearFilterField={handleClearFilterField('name')}
+            />
+            <FilterField
+              filter={filters.creationDate}
+              name='creationDate'
+              label='Creation Date'
+              filterType={filterTypes.DATE}
+              handleChangeFilterSearchStr={handleFilterValueChange}
+              handleChangeFilterOperation={handleFilterOperationChange}
+              handleClearFilterField={handleClearFilterField('creationDate')}
+            />
+            <FilterField
+              filter={filters.height}
+              name='height'
+              label='Height'
+              filterType={filterTypes.NUMBER}
+              handleChangeFilterSearchStr={handleFilterValueChange}
+              handleChangeFilterOperation={handleFilterOperationChange}
+              handleClearFilterField={handleClearFilterField('height')}
+            />
+            <FilterField
+              filter={filters.weight}
+              name='weight'
+              label='Weight'
+              filterType={filterTypes.NUMBER}
+              handleChangeFilterSearchStr={handleFilterValueChange}
+              handleChangeFilterOperation={handleFilterOperationChange}
+              handleClearFilterField={handleClearFilterField('weight')}
+            />
+            <FilterField
+              filter={filters.birthday}
+              name='birthday'
+              label='Birthday'
+              filterType={filterTypes.DATE}
+              handleChangeFilterSearchStr={handleFilterValueChange}
+              handleChangeFilterOperation={handleFilterOperationChange}
+              handleClearFilterField={handleClearFilterField('birthday')}
+            />
+            <FilterField
+              filter={filters.nationality}
+              name='nationality'
+              label='Nationality'
+              filterType={filterTypes.TEXT}
+              handleChangeFilterSearchStr={handleFilterValueChange}
+              handleChangeFilterOperation={handleFilterOperationChange}
+              handleClearFilterField={handleClearFilterField('nationality')}
+            />
+            <FilterField
+              filter={filters.hairColor}
+              name='hairColor'
+              label='Hair Color'
+              filterType={filterTypes.TEXT}
+              handleChangeFilterSearchStr={handleFilterValueChange}
+              handleChangeFilterOperation={handleFilterOperationChange}
+              handleClearFilterField={handleClearFilterField('hairColor')}
+            />
             <FormGroup>
               <FormLabel sx={{fontSize: '14px'}}>Coordinates</FormLabel>
-              <Box display='flex'>
-                <TextField
-                  select
-                  value={filters['coordinates.x'].operation}
-                  size='small'
-                  sx={{
-                    width: '70px'
-                  }}
-                  name='coordinates.x'
-                  onChange={handleFilterOperationChange}
-                >
-                  {filterOperationTypes.map((option) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  label="X"
-                  value={filters['coordinates.x'].searchStr}
-                  name='coordinates.x'
-                  shrink
-                  onChange={handleFilterValueChange}
-                  inputProps={{type: 'number'}}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  size='small'
-                />
-              </Box>
-              <Box display='flex'>
-                <TextField
-                  select
-                  value={filters['coordinates.y'].operation}
-                  size='small'
-                  sx={{
-                    width: '70px'
-                  }}
-                  name='coordinates.y'
-                  onChange={handleFilterOperationChange}
-                >
-                  {filterOperationTypes.map((option) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  label="Y"
-                  value={filters['coordinates.y'].searchStr}
-                  name='coordinates.y'
-                  shrink
-                  onChange={handleFilterValueChange}
-                  inputProps={{type: 'number'}}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  size='small'
-                />
-              </Box>
+              <FilterField
+                filter={filters['coordinates.x']}
+                name='coordinates.x'
+                label='X'
+                filterType={filterTypes.NUMBER}
+                handleChangeFilterSearchStr={handleFilterValueChange}
+                handleChangeFilterOperation={handleFilterOperationChange}
+                handleClearFilterField={handleClearFilterField('coordinates.x')}
+              />
+              <FilterField
+                filter={filters['coordinates.y']}
+                name='coordinates.y'
+                label='Y'
+                filterType={filterTypes.NUMBER}
+                handleChangeFilterSearchStr={handleFilterValueChange}
+                handleChangeFilterOperation={handleFilterOperationChange}
+                handleClearFilterField={handleClearFilterField('coordinates.y')}
+              />
+
             </FormGroup>
             <FormGroup>
               <FormLabel sx={{fontSize: '14px'}}>Location</FormLabel>
-              <Box display='flex'>
-                <TextField
-                  select
-                  value={filters['location.x'].operation}
-                  size='small'
-                  sx={{
-                    width: '70px'
-                  }}
-                  name='location.x'
-                  onChange={handleFilterOperationChange}
-                >
-                  {filterOperationTypes.map((option) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  label="X"
-                  value={filters['location.x'].searchStr}
-                  name='location.x'
-                  shrink
-                  onChange={handleFilterValueChange}
-                  inputProps={{type: 'number'}}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  size='small'
-                />
-              </Box>
-              <Box display='flex'>
-                <TextField
-                  select
-                  value={filters['location.y'].operation}
-                  size='small'
-                  sx={{
-                    width: '70px'
-                  }}
-                  name='location.y'
-                  onChange={handleFilterOperationChange}
-                >
-                  {filterOperationTypes.map((option) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  label="Y"
-                  value={filters['location.y'].searchStr}
-                  name='location.y'
-                  shrink
-                  onChange={handleFilterValueChange}
-                  inputProps={{type: 'number'}}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  size='small'
-                />
-              </Box>
-              <Box display='flex'>
-                <TextField
-                  select
-                  value={filters['location.name'].operation}
-                  size='small'
-                  sx={{
-                    width: '70px'
-                  }}
-                  name='location.name'
-                  onChange={handleFilterOperationChange}
-                >
-                  {filterOperationTypes.map((option) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  label="Name"
-                  value={filters['location.name'].searchStr}
-                  name='location.Name'
-                  shrink
-                  onChange={handleFilterValueChange}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  size='small'
-                />
-              </Box>
+              <FilterField
+                filter={filters['location.x']}
+                name='location.x'
+                label='X'
+                filterType={filterTypes.NUMBER}
+                handleChangeFilterSearchStr={handleFilterValueChange}
+                handleChangeFilterOperation={handleFilterOperationChange}
+                handleClearFilterField={handleClearFilterField('location.x')}
+              />
+              <FilterField
+                filter={filters['location.y']}
+                name='location.y'
+                label='Y'
+                filterType={filterTypes.NUMBER}
+                handleChangeFilterSearchStr={handleFilterValueChange}
+                handleChangeFilterOperation={handleFilterOperationChange}
+                handleClearFilterField={handleClearFilterField('location.y')}
+              />
+              <FilterField
+                filter={filters['location.name']}
+                name='location.name'
+                label='Name'
+                filterType={filterTypes.TEXT}
+                handleChangeFilterSearchStr={handleFilterValueChange}
+                handleChangeFilterOperation={handleFilterOperationChange}
+                handleClearFilterField={handleClearFilterField('location.name')}
+              />
             </FormGroup>
           </div>
+        </Box>
+        <Box sx={{
+          display: 'flex',
+          m: 1,
+          gap: 2,
+          justifyContent: 'right'
+        }}>
+          <Button variant="outlined"
+                  color='error'
+                  onClick={handleClearAllFilters}>Очистить</Button>
+          <Button variant="contained" sx={{
+            boxShadow: 'none'
+          }}
+                  onClick={handleApplyFilters}
+          >Применить</Button>
         </Box>
       </Popover>
     </div>

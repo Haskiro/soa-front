@@ -1,5 +1,9 @@
 import {createSlice} from '@reduxjs/toolkit'
-import {changeSortField, personsInitialState} from "./Persons.helpers";
+import {
+  changeSortField, initialFilter,
+  initialFilterField,
+  personsInitialState
+} from "./Persons.helpers";
 import {getPersons} from "./Persons.thunks";
 import {statuses} from "../../../utils/constants/common";
 
@@ -12,6 +16,32 @@ export const PersonsSlice = createSlice({
     },
     setPageSize: (state, action) => {
       state.pageParams.pageSize = action.payload;
+    },
+    setFilterSearchStr: (state, action) => {
+      state.filters[action.payload.field] = {
+        ...state.filters[action.payload.field],
+        searchStr: action.payload.value
+      }
+    },
+    setFilterOperation: (state, action) => {
+      state.filters[action.payload.field] = {
+        ...state.filters[action.payload.field],
+        operation: action.payload.value
+      }
+    },
+    applyFilters: (state) => {
+      for (const filterName in state.filters) {
+        const filter = state.filters[filterName];
+        if (filter.searchStr && !filter.chosenValue) {
+          filter.chosenValue = filter.searchStr
+        }
+      }
+    },
+    clearFilterField: (state, action) => {
+      state.filters[action.payload] = initialFilterField
+    },
+    clearAllFilters: (state) => {
+      state.filters = initialFilter
     },
     setPage: (state, action) => {
       state.pageParams.pageNumber = action.payload
@@ -42,7 +72,12 @@ export const {
   setPageParams,
   setPageSize,
   setPage,
-  checkSortField
+  checkSortField,
+  setFilterSearchStr,
+  setFilterOperation,
+  applyFilters,
+  clearFilterField,
+  clearAllFilters
 } = PersonsSlice.actions
 
 export default PersonsSlice.reducer

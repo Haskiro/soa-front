@@ -77,29 +77,38 @@ export const changeSortField = (field) => {
   return newField;
 }
 
+export const operations = {
+  eq: '=',
+  ne: '!=',
+  gt: '>',
+  lt: '<',
+  lte: '<=',
+  gte: '>='
+}
+
 export const filterOperationTypes = [
   {
     id: 'eq',
-    label: '='
+    label: operations.eq
   },
   {
     id: 'ne',
-    label: '!='
+    label: operations.ne
   },
   {
     id: 'gt',
-    label: '>'
+    label: operations.gt
   },
   {
     id: 'lt',
-    label: '<'
+    label: operations.lt
   },
   {
     id: 'lte',
-    label: '<='
+    label: operations.lte
   },
   {
     id: 'gte',
-    label: '>='
+    label: operations.gte
   },
 ]

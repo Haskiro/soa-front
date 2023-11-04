@@ -11,5 +11,12 @@ export const statuses = {
   REJECTED: 'rejected'
 }
 
+export const filterTypes = {
+  TEXT: 'text',
+  SELECT: 'select',
+  NUMBER: 'number',
+  DATE: 'date'
+}
+
 export const messageErrorMoreThen500 = 'Server Error:  Сервер недоступен';
 export const messageErrorLessThen500 = 'Client Error:  Неудачный запрос на сервер';
