@@ -1,17 +1,17 @@
-import {deleteJson, getJson} from "../utils/helpers/network-helpers";
-import {globalUrl} from "../utils/constants/common";
+import {deleteJson, getJson, postJson} from "../utils/helpers/network-helpers";
+import {globalUrl, personsUrl} from "../utils/constants/common";
 
 export const getPersons = async () => {
   try {
-    return await getJson(`${globalUrl}/${persons}`)
+    return await getJson(`${globalUrl}/${personsUrl}`)
   } catch (e) {
-    console.error('Error was caught during fetching persons')
+    console.error('Error was caught during fetching Persons')
   }
 }
 
 export const getPersonById = async (id) => {
   try {
-    return await getJson(`${globalUrl}/${persons}/${id}`)
+    return await getJson(`${globalUrl}/${personsUrl}/${id}`)
   } catch (e) {
     console.error(`Error was caught during fetching person with id: ${id}`)
   }
@@ -19,7 +19,7 @@ export const getPersonById = async (id) => {
 
 export const deletePerson = async (id) => {
   try {
-    return await deleteJson(`${globalUrl}/${persons}/${id}`)
+    return await deleteJson(`${globalUrl}/${personsUrl}/${id}`)
   } catch (e) {
     console.error(`Error was caught during deleting person with id: ${id}`)
   }
@@ -27,7 +27,7 @@ export const deletePerson = async (id) => {
 
 export const createNewPerson = async (newPerson) => {
   try {
-    return await postJson(`${globalUrl}/${persons}`, newPerson)
+    return await postJson(`${globalUrl}/${personsUrl}`, newPerson)
   } catch (e) {
     console.error('Error was caught during creating new person')
   }
@@ -35,7 +35,7 @@ export const createNewPerson = async (newPerson) => {
 
 export const getPersonsWeightLess = async (weight) => {
   try {
-    return await getJson(`${globalUrl}/${persons}/weight-less/${weight}`)
+    return await getJson(`${globalUrl}/${personsUrl}/weight-less/${weight}`)
   } catch (e) {
     console.error(`Error was caught during fetching persons with weight less than ${weight}`)
   }
@@ -43,7 +43,7 @@ export const getPersonsWeightLess = async (weight) => {
 
 export const deletePersonsWeightLess = async (location) => {
   try {
-    return await deleteJson(`${globalUrl}/${persons}/location`, location)
+    return await deleteJson(`${globalUrl}/${personsUrl}/location`, location)
   } catch (e) {
     console.error(`Error was caught during deleting persons 
     with location x: ${location.x}, y: ${location.y}, name: ${location.name}`)

@@ -4,3 +4,12 @@ export const PRIMARY_TIMEOUT = 150000;
 
 export const globalUrl = getGlobalUrl();
 export const personsUrl = 'persons';
+export const statuses = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  FULFILLED: 'fulfilled',
+  REJECTED: 'rejected'
+}
+
+export const messageErrorMoreThen500 = 'Server Error:  Сервер недоступен';
+export const messageErrorLessThen500 = 'Client Error:  Неудачный запрос на сервер';

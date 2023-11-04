@@ -1,17 +1,27 @@
 import TableCell from "@mui/material/TableCell";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TableRow from "@mui/material/TableRow";
+import {useDispatch, useSelector} from "react-redux";
+import {checkSortField} from "../store/slices/Persons/Persons.slice";
+import {sortFieldsSelector} from "../store/slices/Persons/Persons.selectors";
 
 const SortableNestedTableCell = ({
   headCell,
-  orderBy,
-  order,
-  createSortHandler,
   padding = 'normal'
 }) => {
-  const headCellSortDirection = !headCell.nestedCells && orderBy === headCell.id ?
-                                order :
+  const sort = useSelector(sortFieldsSelector);
+
+  const dispatch = useDispatch();
+
+  const isSortActive = sort[headCell.id]?.checked;
+  const sortDirection = sort[headCell.id]?.order;
+  const headCellSortDirection = !headCell.nestedCells ?
+                                sortDirection :
                                 false;
+
+  const handleSortLabelClick = () => {
+    dispatch(checkSortField(headCell.id));
+  }
 
   return (
     <TableCell
@@ -28,25 +38,25 @@ const SortableNestedTableCell = ({
     >
       {!headCell.nestedCells ?
        <TableSortLabel
-         active={orderBy === headCell.id}
-         direction={orderBy === headCell.id ? order : 'asc'}
-         onClick={createSortHandler(headCell.id)}
+         active={isSortActive}
+         direction={isSortActive ? sort[headCell.id].order : 'asc'}
+         onClick={handleSortLabelClick}
        >
          {headCell.label}
        </TableSortLabel> :
        <>
          <TableRow>
-           <TableCell variant='head' colSpan={headCell.nestedCells.length} align='left' sx={{
-             p: '0 0 16px 0',
-           }}>
+           <TableCell variant='head'
+                      colSpan={headCell.nestedCells.length}
+                      align='left'
+                      sx={{
+                        p: '0 0 16px 0',
+                      }}>
              {headCell.label}
            </TableCell>
          </TableRow>
          {headCell.nestedCells.map(nestedHeadCell => (
            <SortableNestedTableCell headCell={nestedHeadCell}
-                                    order={order}
-                                    orderBy={orderBy}
-                                    createSortHandler={createSortHandler}
                                     padding='none'
                                     key={nestedHeadCell.id}
            />

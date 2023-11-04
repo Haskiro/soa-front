@@ -12,11 +12,11 @@ export const headCells = [
     label: 'Coordinates',
     nestedCells: [
       {
-        id: "x",
+        id: "coordinates.x",
         label: "x"
       },
       {
-        id: "y",
+        id: "coordinates.y",
         label: "y"
       },
     ]
@@ -46,15 +46,15 @@ export const headCells = [
     label: 'Location',
     nestedCells: [
       {
-        id: "x",
+        id: "location.x",
         label: "x"
       },
       {
-        id: "y",
+        id: "location.y",
         label: "y"
       },
       {
-        id: "name",
+        id: "location.name",
         label: "Name"
       },
     ]
@@ -91,24 +91,6 @@ export const createData = (
   };
 }
 
-export const descendingComparator = (a, b, orderBy) => {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-export const getComparator = (order, orderBy) => {
-  return order === 'desc' ? (a, b) => descendingComparator(
-    a,
-    b,
-    orderBy
-  ) : (a, b) => -descendingComparator(
-    a,
-    b,
-    orderBy
-  );
+export const getFilterDeps = (filters) => {
+  return Object.values(filters).map(filter => filter.chosenValue);
 }
