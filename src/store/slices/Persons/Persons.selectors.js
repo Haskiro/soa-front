@@ -5,3 +5,7 @@ export const sortFieldsSelector = (state) => state.persons.sortFields;
 export const personsListStatusSelector = (state) => state.persons.status;
 export const personOnEditSelector = (state) => state.persons.personOnEdit;
 export const singlePersonStatusSelector = (state) => state.persons.singlePersonStatus;
+export const foundPersonsSelector = (state) => state.persons.personsWithWeightLessThan.foundPersons;
+export const searchWeightSelector = (state) =>  state.persons.personsWithWeightLessThan.searchValue;
+export const hairAndNationalityCountSelector = (state) => state.persons.personsWithNationalityAndHairColor;
+export const hairColorCountSelector = (state) => state.persons.personsWithHairColor;

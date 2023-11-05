@@ -1,10 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {
   changeSortField, emptyPerson, initialFilter,
-  initialFilterField,
+  initialFilterField, initialPersonsWithWeightLessThan,
   personsInitialState
 } from "./Persons.helpers";
-import {getPersonById, getPersons} from "./Persons.thunks";
+import {
+  getPersonById,
+  getPersons,
+  getPersonWithWeightLessThan,
+  searchByHairColor,
+  searchByNationalityAndHairColor
+} from "./Persons.thunks";
 import {
   statuses
 } from "../../../utils/constants/common";
@@ -66,6 +72,12 @@ export const PersonsSlice = createSlice({
     },
     clearPersonOnEdit: (state) => {
       state.personOnEdit = emptyPerson
+    },
+    setSearchWeight: (state, action) => {
+      state.personsWithWeightLessThan.searchValue = action.payload;
+    },
+    clearFoundPersonsWithWeightTable: (state) => {
+      state.personsWithWeightLessThan = initialPersonsWithWeightLessThan;
     }
   },
   extraReducers: (builder) => {
@@ -91,6 +103,15 @@ export const PersonsSlice = createSlice({
       .addCase(getPersonById.rejected, (state) => {
         state.singlePersonStatus = statuses.REJECTED
       })
+      .addCase(getPersonWithWeightLessThan.fulfilled, (state, action) => {
+        state.personsWithWeightLessThan.foundPersons = action.payload
+      })
+      .addCase(searchByNationalityAndHairColor.fulfilled, (state, action) => {
+        state.personsWithNationalityAndHairColor = action.payload;
+      })
+      .addCase(searchByHairColor.fulfilled, (state, action) => {
+        state.personsWithHairColor = action.payload;
+      })
   }
 })
 
@@ -105,7 +126,9 @@ export const {
   clearFilterField,
   clearAllFilters,
   changePersonOnEdit,
-  clearPersonOnEdit
+  clearPersonOnEdit,
+  setSearchWeight,
+  clearFoundPersonsWithWeightTable
 } = PersonsSlice.actions
 
 export default PersonsSlice.reducer

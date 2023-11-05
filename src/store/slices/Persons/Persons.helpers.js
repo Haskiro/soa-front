@@ -1,5 +1,4 @@
 import {statuses} from "../../../utils/constants/common";
-import {rows} from "../../../mocks/personsMock";
 
 export const initialPageParams = {
   totalPages: 0,
@@ -73,12 +72,18 @@ export const emptyPerson = {
   hairColor: ''
 }
 
+export const initialPersonsWithWeightLessThan = {
+  searchValue: '',
+  foundPersons: []
+}
+
 export const personsInitialState = {
   entities: [],
-  // todo
   personOnEdit: emptyPerson,
-  // personOnEdit: rows[0],
   singlePersonStatus: statuses.IDLE,
+  personsWithWeightLessThan: initialPersonsWithWeightLessThan,
+  personsWithNationalityAndHairColor: null,
+  personsWithHairColor: null,
   sortFields: initialSortFields,
   filters: initialFilter,
   pageParams: initialPageParams,

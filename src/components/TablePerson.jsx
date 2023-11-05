@@ -41,8 +41,7 @@ export default function TablePerson() {
     pageSize: rowsPerPage,
     pageNumber: page
   } = useSelector(pageParamsSelector);
-  // const persons = useSelector(personsSelector);
-  const persons = rows;
+  const persons = useSelector(personsSelector);
   const filters = useSelector(filtersSelector);
   const sortFields = useSelector(sortFieldsSelector);
   const status = useSelector(personsListStatusSelector);
@@ -97,8 +96,7 @@ export default function TablePerson() {
         >
           <EnhancedTableHead/>
           <TableBody>
-            {/*{status === statuses.FULFILLED && persons.map((row, index) => {*/}
-            {persons.map((row, index) => {
+            {status === statuses.FULFILLED && persons.map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
 
               return (<TableRow

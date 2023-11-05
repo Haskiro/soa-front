@@ -3,6 +3,9 @@ export const DEFAULT_LOADING_TIMEOUT = 1000;
 
 export const globalUrl = 'https://localhost:3001';
 export const personsUrl = 'persons';
+export const nationalityUrl = 'nationality';
+export const hairColorUrl = 'hairColor';
+
 export const statuses = {
   IDLE: 'idle',
   PENDING: 'pending',
