@@ -1,4 +1,5 @@
 import {
+  DEFAULT_LOADING_TIMEOUT,
   messageErrorLessThen500,
   messageErrorMoreThen500,
   PRIMARY_TIMEOUT
@@ -22,7 +23,7 @@ const createRequest = (method) => {
 export const getJson = createRequest('GET');
 export const postJson = createRequest('POST');
 export const deleteJson = createRequest('DELETE');
-export const patchJson = createRequest('PATCH');
+export const putJson = createRequest('PUT');
 
 export const getGlobalUrl = () => {
   return process.env.REACT_APP_SERVER_URL || '';
@@ -94,7 +95,7 @@ export const apiDefault = async ({
     throw new Error('Превышено время ожидания ответа')
   }, PRIMARY_TIMEOUT)
   try {
-    const res = await apiCall(url, data);
+    const res = await withTimeout(() => apiCall(url, data), DEFAULT_LOADING_TIMEOUT);
     return fulfillResponse(
       res,
       {
@@ -146,4 +147,13 @@ export const rejectError = (e, {
   }
 
   return Promise.reject(e)
+}
+
+const sleep = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export const withTimeout = async (cb, timeout) => {
+  await sleep(timeout)
+  return cb();
 }

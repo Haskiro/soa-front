@@ -10,17 +10,33 @@ import Paper from '@mui/material/Paper';
 import EnhancedTableHead from "./EnhancedTableHead";
 import EnhancedTableToolbar from "./EnhancedTableToolbar";
 import {rows} from "../mocks/personsMock";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
   filtersSelector,
-  pageParamsSelector, sortFieldsSelector
+  pageParamsSelector,
+  personsListStatusSelector,
+  personsSelector,
+  sortFieldsSelector
 } from "../store/slices/Persons/Persons.selectors";
-import {setPage, setPageSize} from "../store/slices/Persons/Persons.slice";
-import {getPersons} from "../store/slices/Persons/Persons.thunks";
+import {
+  clearPersonOnEdit,
+  setPage,
+  setPageSize
+} from "../store/slices/Persons/Persons.slice";
+import {
+  getPersonById,
+  getPersons
+} from "../store/slices/Persons/Persons.thunks";
 import {getFilterDeps} from "../utils/helpers/data-helpers";
+import CreateUpdatePersonModal from "./CreateUpdatePersonModal";
+import {statuses} from "../utils/constants/common";
+import {Button, CircularProgress, Stack} from "@mui/material";
+import {personModals} from "../store/slices/Persons/Persons.helpers";
 
 export default function TablePerson() {
+  const [openedModal, setOpenedModal] = useState(personModals.NONE)
+
   const {
     pageSize: rowsPerPage,
     pageNumber: page
@@ -29,6 +45,7 @@ export default function TablePerson() {
   const persons = rows;
   const filters = useSelector(filtersSelector);
   const sortFields = useSelector(sortFieldsSelector);
+  const status = useSelector(personsListStatusSelector);
 
   const dispatch = useDispatch();
 
@@ -51,7 +68,23 @@ export default function TablePerson() {
     (1 + page) * rowsPerPage - rows.length
   ) : 0;
 
+  const handleModalClose = () => setOpenedModal(personModals.NONE);
+
+  const handleClickPerson = (id) => () => {
+    dispatch(getPersonById(id));
+    setOpenedModal(personModals.EDIT);
+  }
+
+  const handleOpenCreatePersonModal = () => {
+    dispatch(clearPersonOnEdit());
+    setOpenedModal(personModals.CREATE)
+  }
+
   return (<Box sx={{width: '100%'}}>
+    <CreateUpdatePersonModal isOpen={openedModal !== personModals.NONE}
+                             onClose={handleModalClose}
+                             isEditMode={openedModal === personModals.EDIT}
+    />
     <Paper sx={{
       width: '100%',
       mb: 2
@@ -64,11 +97,16 @@ export default function TablePerson() {
         >
           <EnhancedTableHead/>
           <TableBody>
+            {/*{status === statuses.FULFILLED && persons.map((row, index) => {*/}
             {persons.map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
 
               return (<TableRow
                 key={row.id}
+                sx={{
+                  cursor: 'pointer'
+                }}
+                onClick={handleClickPerson(row.id)}
               >
                 <TableCell
                   component="th"
@@ -120,12 +158,18 @@ export default function TablePerson() {
                 <TableCell align="left">{row.hairColor}</TableCell>
               </TableRow>);
             })}
-            {emptyRows > 0 && (<TableRow
+            {emptyRows > 0 || status !== statuses.FULFILLED && (<TableRow
               style={{
                 height: 53 * emptyRows,
               }}
             >
-              <TableCell colSpan={6}/>
+              <TableCell colSpan={12}>
+                {status === statuses.PENDING &&
+                  <Stack direction="row" justifyContent='center'>
+                    <CircularProgress/>
+                  </Stack>
+                }
+              </TableCell>
             </TableRow>)}
           </TableBody>
         </Table>
@@ -139,6 +183,11 @@ export default function TablePerson() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <Button variant='outlined'
+              onClick={handleOpenCreatePersonModal}
+              sx={{m: 1}}>
+        Create new person
+      </Button>
     </Paper>
   </Box>);
 }

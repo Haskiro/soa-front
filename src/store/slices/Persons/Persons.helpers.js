@@ -1,4 +1,5 @@
 import {statuses} from "../../../utils/constants/common";
+import {rows} from "../../../mocks/personsMock";
 
 export const initialPageParams = {
   totalPages: 0,
@@ -52,8 +53,32 @@ export const initialFilter = {
   hairColor: initialFilterField,
 }
 
+export const emptyPerson = {
+  id: '',
+  name: '',
+  coordinates: {
+    x: '',
+    y: ''
+  },
+  creationDate: '',
+  height: '',
+  birthday: '',
+  weight: '',
+  nationality: '',
+  location: {
+    x: '',
+    y: '',
+    name: ''
+  },
+  hairColor: ''
+}
+
 export const personsInitialState = {
   entities: [],
+  // todo
+  personOnEdit: emptyPerson,
+  // personOnEdit: rows[0],
+  singlePersonStatus: statuses.IDLE,
   sortFields: initialSortFields,
   filters: initialFilter,
   pageParams: initialPageParams,
@@ -112,3 +137,9 @@ export const filterOperationTypes = [
     label: operations.gte
   },
 ]
+
+export const personModals = {
+  NONE: 'none',
+  EDIT: 'edit',
+  CREATE: 'create'
+}

@@ -1,11 +1,13 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {
-  changeSortField, initialFilter,
+  changeSortField, emptyPerson, initialFilter,
   initialFilterField,
   personsInitialState
 } from "./Persons.helpers";
-import {getPersons} from "./Persons.thunks";
-import {statuses} from "../../../utils/constants/common";
+import {getPersonById, getPersons} from "./Persons.thunks";
+import {
+  statuses
+} from "../../../utils/constants/common";
 
 export const PersonsSlice = createSlice({
   name: 'persons',
@@ -51,6 +53,19 @@ export const PersonsSlice = createSlice({
         ...state.sortFields,
         [action.payload]: changeSortField(state.sortFields[action.payload])
       }
+    },
+    changePersonOnEdit: (state, action) => {
+      const value = action.payload.field === 'creationDate' || action.payload.field === 'birthday' ?
+                    new Date(action.payload.value).toJSON() : action.payload.value;
+
+        state.personOnEdit[action.payload.field] = action.payload.nestedField ? {
+          ...state.personOnEdit[action.payload.field],
+          [action.payload.nestedField]: value
+        } : value
+
+    },
+    clearPersonOnEdit: (state) => {
+      state.personOnEdit = emptyPerson
     }
   },
   extraReducers: (builder) => {
@@ -58,12 +73,23 @@ export const PersonsSlice = createSlice({
       .addCase(getPersons.pending, (state) => {
         state.status = statuses.PENDING;
       })
-      .addCase(getPersons.fulfilled, (state, action) => {
-        state.status = statuses.FULFILLED;
+      .addCase(getPersons.fulfilled, async (state, action) => {
+        state.status = statuses.FULFILLED
         state.entities = action.payload
       })
       .addCase(getPersons.rejected, (state) => {
         state.status = statuses.REJECTED;
+      })
+
+      .addCase(getPersonById.pending, (state) => {
+        state.singlePersonStatus = statuses.PENDING;
+      })
+      .addCase(getPersonById.fulfilled, (state, action) => {
+        state.singlePersonStatus = statuses.FULFILLED
+        state.personOnEdit = action.payload
+      })
+      .addCase(getPersonById.rejected, (state) => {
+        state.singlePersonStatus = statuses.REJECTED
       })
   }
 })
@@ -77,7 +103,9 @@ export const {
   setFilterOperation,
   applyFilters,
   clearFilterField,
-  clearAllFilters
+  clearAllFilters,
+  changePersonOnEdit,
+  clearPersonOnEdit
 } = PersonsSlice.actions
 
 export default PersonsSlice.reducer

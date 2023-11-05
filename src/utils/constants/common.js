@@ -1,8 +1,7 @@
-import {getGlobalUrl} from "../helpers/network-helpers";
-
 export const PRIMARY_TIMEOUT = 150000;
+export const DEFAULT_LOADING_TIMEOUT = 1000;
 
-export const globalUrl = getGlobalUrl();
+export const globalUrl = 'https://localhost:3001';
 export const personsUrl = 'persons';
 export const statuses = {
   IDLE: 'idle',

@@ -94,3 +94,9 @@ export const createData = (
 export const getFilterDeps = (filters) => {
   return Object.values(filters).map(filter => filter.chosenValue);
 }
+
+export const getISOSDate = (date) => {
+  return date.getFullYear() + '-' +
+    ('0'+ (date.getMonth() + 1)).slice(-2) + '-' +
+    ('0'+ date.getDate()).slice(-2);
+}
