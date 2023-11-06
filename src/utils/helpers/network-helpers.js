@@ -25,10 +25,6 @@ export const postJson = createRequest('POST');
 export const deleteJson = createRequest('DELETE');
 export const putJson = createRequest('PUT');
 
-export const getGlobalUrl = () => {
-  return process.env.REACT_APP_SERVER_URL || '';
-}
-
 export const getPageParamsFromRes = (res) => {
   return {
     totalPages: res.totalPages,
