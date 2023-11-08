@@ -128,9 +128,31 @@ export default function TablePerson() {
                     borderBottom: 'none'
                   }}>{row.coordinates.y}</TableCell>
                 </TableCell>
-                <TableCell align="left">{new Date(row.creationDate).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  <TableCell align="left" sx={{
+                    width: 1 / 2,
+                    p: '0 5px 0 0',
+                    borderBottom: 'none'
+                  }}>{new Date(row.creationDate).toLocaleDateString()}</TableCell>
+                  <TableCell align="left" sx={{
+                    width: 1 / 2,
+                    p: '0 0 0 5px',
+                    borderBottom: 'none'
+                  }}>{new Date(row.creationDate).toLocaleTimeString()}</TableCell>
+                </TableCell>
                 <TableCell align="left">{row.height}</TableCell>
-                <TableCell align="left">{new Date(row.birthday).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  <TableCell align="left" sx={{
+                    width: 1 / 2,
+                    p: '0 5px 0 0',
+                    borderBottom: 'none'
+                  }}>{new Date(row.birthday).toLocaleDateString()}</TableCell>
+                  <TableCell align="left" sx={{
+                    width: 1 / 2,
+                    p: '0 0 0 5px',
+                    borderBottom: 'none'
+                  }}>{new Date(row.birthday).toLocaleTimeString()}</TableCell>
+                </TableCell>
                 <TableCell align="left">{row.weight}</TableCell>
                 <TableCell align="left">{row.nationality}</TableCell>
                 <TableCell align="left" sx={{
@@ -161,7 +183,7 @@ export default function TablePerson() {
                 height: 53 * emptyRows,
               }}
             >
-              <TableCell colSpan={12}>
+              <TableCell colSpan={14}>
                 {status === statuses.PENDING &&
                   <Stack direction="row" justifyContent='center'>
                     <CircularProgress/>

@@ -59,7 +59,6 @@ export const emptyPerson = {
     x: '',
     y: ''
   },
-  creationDate: '',
   height: '',
   birthday: '',
   weight: '',

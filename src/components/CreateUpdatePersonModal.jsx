@@ -135,18 +135,6 @@ const CreateUpdatePersonModal = ({
               />
               <TextField
                 required={!isEditMode}
-                label={'Creation Date'}
-                value={getISOSDate(new Date(personOnEdit.creationDate))}
-                name={'creationDate'}
-                type='date'
-                onChange={handleChangeValue}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                size='small'
-              />
-              <TextField
-                required={!isEditMode}
                 label={'Height'}
                 value={personOnEdit.height}
                 name={'height'}

@@ -10,6 +10,7 @@ const EnhancedTableHead = () => {
           <SortableNestedTableCell
             headCell={headCell}
             key={headCell.id}
+            sortable={headCell.sortable}
           />
         )
       )}
