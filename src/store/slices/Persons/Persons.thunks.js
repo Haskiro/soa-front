@@ -39,7 +39,7 @@ export const getPersons = createAsyncThunk('persons/getPersons', async (_, {
 
     dispatch(setPageParams(newPageParams));
 
-    return res;
+    return res.content;
   } catch (e) {
     console.error('Error was caught during fetching Persons')
     return Promise.reject();

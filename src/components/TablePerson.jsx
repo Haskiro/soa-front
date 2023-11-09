@@ -39,7 +39,8 @@ export default function TablePerson() {
 
   const {
     pageSize: rowsPerPage,
-    pageNumber: page
+    pageNumber: page,
+    totalElements
   } = useSelector(pageParamsSelector);
   const persons = useSelector(personsSelector);
   const filters = useSelector(filtersSelector);
@@ -197,7 +198,7 @@ export default function TablePerson() {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={rows.length}
+        count={totalElements}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

@@ -29,9 +29,8 @@ export const getPageParamsFromRes = (res) => {
   return {
     totalPages: res.totalPages,
     totalElements: res.totalElements,
-    pageNumber: res.pageable.pageNumber,
-    pageSize: res.pageSize.pageNumber,
-    last: res.last,
+    pageNumber: res.number,
+    pageSize: res.size,
   }
 }
 
