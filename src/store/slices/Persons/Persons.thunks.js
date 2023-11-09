@@ -29,20 +29,19 @@ export const getPersons = createAsyncThunk('persons/getPersons', async (_, {
   const sortReqStr = createSortQueryStr(sortFields, true);
 
   try {
-    const res = await withTimeout(() => apiDefault({
+    const res = await apiDefault({
       apiCall: getJson,
       url: `${globalUrl}/${personsUrl}?${pageReqStr}${filtersReqStr}${sortReqStr}`,
       dispatch
-    }), DEFAULT_LOADING_TIMEOUT)
+    })
     console.log(res)
 
     const newPageParams = getPageParamsFromRes(res);
     console.log(newPageParams)
 
-    // dispatch(setPageParams(newPageParams));
+    dispatch(setPageParams(newPageParams));
 
-    // return res.content;
-    return [];
+    return res.content;
   } catch (e) {
     console.error('Error was caught during fetching Persons')
     return Promise.reject();

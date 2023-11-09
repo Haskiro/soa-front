@@ -31,11 +31,12 @@ export const getPageParamsFromRes = (res) => {
     totalElements: res.totalElements,
     pageNumber: res.number,
     pageSize: res.size,
+    last: res.totalPages === res.number + 1
   }
 }
 
 export const createPageableQuery = (pageParams, needAmpersand = false) => {
-  const page = pageParams.totalPages === pageParams.pageNumber + 1 ?
+  const page = pageParams.last ?
                pageParams.pageNumber :
                pageParams.pageNumber + 1
   return `${needAmpersand ? '&' : ''}page=${page}&size=${pageParams.pageSize}`;

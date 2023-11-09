@@ -4,7 +4,8 @@ export const initialPageParams = {
   totalPages: 0,
   totalElements: 0,
   pageNumber: 0,
-  pageSize: 5
+  pageSize: 5,
+  last: true,
 }
 
 export const initialFilterField = {
