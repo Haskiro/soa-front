@@ -92,13 +92,14 @@ export const apiDefault = async ({
   }, PRIMARY_TIMEOUT)
   try {
     const res = await withTimeout(() => apiCall(url, data), DEFAULT_LOADING_TIMEOUT);
-    return fulfillResponse(
+    fulfillResponse(
       res,
       {
         dispatch,
         timeout
       }
     )
+    return await res.json();
   } catch (e) {
     return rejectError(
       e,
@@ -125,7 +126,6 @@ export const fulfillResponse = (res, {
                messageErrorLessThen500
     }))
   }
-  return res
 }
 export const rejectError = (e, {
   dispatch,
