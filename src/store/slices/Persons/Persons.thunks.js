@@ -34,10 +34,8 @@ export const getPersons = createAsyncThunk('persons/getPersons', async (_, {
       url: `${globalUrl}/${personsUrl}?${pageReqStr}${filtersReqStr}${sortReqStr}`,
       dispatch
     })
-    console.log(res)
 
     const newPageParams = getPageParamsFromRes(res);
-    console.log(newPageParams)
 
     dispatch(setPageParams(newPageParams));
 

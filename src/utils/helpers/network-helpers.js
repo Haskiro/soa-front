@@ -31,7 +31,7 @@ export const getPageParamsFromRes = (res) => {
     totalElements: res.totalElements,
     pageNumber: res.pageNumber,
     pageSize: res.pageSize,
-    last: res.totalPages === res.number + 1
+    last: res.totalPages === res.pageNumber + 1
   }
 }
 

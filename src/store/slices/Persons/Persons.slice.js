@@ -85,7 +85,8 @@ export const PersonsSlice = createSlice({
       .addCase(getPersons.pending, (state) => {
         state.status = statuses.PENDING;
       })
-      .addCase(getPersons.fulfilled, async (state, action) => {
+      .addCase(getPersons.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.status = statuses.FULFILLED
         state.entities = action.payload
       })
