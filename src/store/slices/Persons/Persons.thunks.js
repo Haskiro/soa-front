@@ -34,12 +34,15 @@ export const getPersons = createAsyncThunk('persons/getPersons', async (_, {
       url: `${globalUrl}/${personsUrl}?${pageReqStr}${filtersReqStr}${sortReqStr}`,
       dispatch
     }), DEFAULT_LOADING_TIMEOUT)
+    console.log(res)
 
     const newPageParams = getPageParamsFromRes(res);
+    console.log(newPageParams)
 
-    dispatch(setPageParams(newPageParams));
+    // dispatch(setPageParams(newPageParams));
 
-    return res.content;
+    // return res.content;
+    return [];
   } catch (e) {
     console.error('Error was caught during fetching Persons')
     return Promise.reject();
