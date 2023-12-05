@@ -123,7 +123,7 @@ export const fulfillResponse = (res, {
 
     res.json().then(data => {
       const alertMessage = Object.entries(data).reduce((acc, entry) => {
-        return `${entry[0]}: ${entry[1]}\n`
+        return acc + `${entry[0]}: ${entry[1]}\n`
       }, `${message}\n`)
       alert(alertMessage);
     })
