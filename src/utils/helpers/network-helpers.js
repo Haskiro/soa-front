@@ -111,19 +111,26 @@ export const apiDefault = async ({
   }
 }
 
-
 export const fulfillResponse = (res, {
   dispatch,
   timeout
 }) => {
   clearTimeout(timeout)
   if (res.status >= 400) {
+    const message = res.status >= 500 ?
+        messageErrorMoreThen500 :
+        messageErrorLessThen500
+
+    res.json().then(data => {
+      const alertMessage = Object.entries(data).reduce((acc, entry) => {
+        return `${entry[0]}: ${entry[1]}\n`
+      }, `${message}\n`)
+      alert(alertMessage);
+    })
     return dispatch(setNewError({
       path: res.url,
       status: res.status,
-      message: res.status >= 500 ?
-               messageErrorMoreThen500 :
-               messageErrorLessThen500
+      message
     }))
   }
 }

@@ -9,11 +9,8 @@ import {
   getPageParamsFromRes,
   postJson,
   putJson,
-  withTimeout
 } from "../../../utils/helpers/network-helpers";
-import {
-  DEFAULT_LOADING_TIMEOUT, globalUrl, hairColorUrl, nationalityUrl, personsUrl
-} from "../../../utils/constants/common";
+import {globalUrl, hairColorUrl, nationalityUrl, personsUrl} from "../../../utils/constants/common";
 import {setPageParams} from "./Persons.slice";
 
 export const getPersons = createAsyncThunk('persons/getPersons', async (_, {
@@ -132,13 +129,11 @@ export const getPersonWithWeightLessThan = createAsyncThunk(
     const searchWeight = getState().persons.personsWithWeightLessThan.searchValue;
 
     try {
-      const res = await apiDefault({
+      return await apiDefault({
         apiCall: getJson,
         url: `${globalUrl}/${personsUrl}/weight-less/${searchWeight}`,
         dispatch
-      })
-
-      return res.persons;
+      });
     } catch (e) {
       console.error(`Error was caught during fetching persons with weight less than ${searchWeight}`)
       return Promise.reject();

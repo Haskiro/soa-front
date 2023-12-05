@@ -86,7 +86,6 @@ export const PersonsSlice = createSlice({
         state.status = statuses.PENDING;
       })
       .addCase(getPersons.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.status = statuses.FULFILLED
         state.entities = action.payload
       })
@@ -105,7 +104,7 @@ export const PersonsSlice = createSlice({
         state.singlePersonStatus = statuses.REJECTED
       })
       .addCase(getPersonWithWeightLessThan.fulfilled, (state, action) => {
-        state.personsWithWeightLessThan.foundPersons = action.payload
+        state.personsWithWeightLessThan.foundPersons = action.payload;
       })
       .addCase(searchByNationalityAndHairColor.fulfilled, (state, action) => {
         state.personsWithNationalityAndHairColor = action.payload;
